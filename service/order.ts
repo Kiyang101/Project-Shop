@@ -37,10 +37,20 @@ export default function order() {
     }
   };
 
+  const postOrder = async (data) => {
+    try {
+      const res = await axios.post("/api/products/orders", data);
+      return res.data;
+    } catch (err) {
+      console.error("Error updating orders:", err);
+    }
+  };
+
   const func = {
     getAllOrder,
     getOrder,
     updateStatus,
+    postOrder,
   };
   return func;
 }

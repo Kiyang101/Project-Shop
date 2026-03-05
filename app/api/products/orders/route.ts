@@ -67,6 +67,42 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function POST(request: Request) {}
+export async function POST(request: Request) {
+  const bodyData = await request.json();
+  const token = request.cookies.get("token")?.value;
+  try {
+    if (!token) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+    const secret_key = process.env.SECRET_KEY as string;
+    const _user = jwt.verify(token, secret_key) as any;
+
+    if (!_user) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const { products, userId, totalPrice, status } = bodyData;
+
+    const q = `INSERT INTO orders ("products", "userId", "totalPrice", "status") 
+              VALUES ($1, $2, $3, $4)`;
+    const result = await database.query(q, [
+      JSON.stringify(products),
+      userId,
+      totalPrice,
+      status,
+    ]);
+
+    return Response.json({ message: "Success" });
+  } catch (error) {
+    console.log("error", error);
+    return Response.json({ message: "Fail" });
+  }
+}
 
 export async function DELETE(request: Request) {}

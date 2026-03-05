@@ -1,12 +1,23 @@
 import useProduct from "@/service/product";
 import useUser from "@/service/user";
 import useBag from "@/service/bag";
+import useOrder from "@/service/order";
 import { redirect } from "next/navigation";
 
 export async function getProduct(id) {
   const _product = useProduct();
   const res = await _product.getProductById(id);
   return res;
+}
+
+export async function getTotalPrice(bagData) {
+  const _product = useProduct();
+  let totalPrice = 0;
+  for (const item of bagData.products) {
+    const product = await _product.getProductById(Number(item.productId));
+    totalPrice += product[0].price * item.quantity;
+  }
+  return totalPrice;
 }
 
 export async function deleteProductFromBag(productId, size = null) {
@@ -112,5 +123,48 @@ export async function updateBag_handler(formData: {
   } catch (error) {
     console.log(error);
     return { message: "fail" };
+  }
+}
+
+export async function postOrder_handler(data) {
+  const _user = useUser();
+  const _product = useProduct();
+  const _order = useOrder();
+  const _bag = useBag();
+  const user = await _user.getUser();
+
+  const { bagId, products, totalPrice } = data;
+
+  // console.log(products, totalPrice);
+
+  try {
+    if (!user.login) {
+      redirect("/home");
+    }
+
+    if (!products || !totalPrice) {
+      return { message: "fail" };
+    }
+
+    for (const item of products) {
+      const product = await _product.getProductById(item.productId);
+      item.productName = product[0].productName;
+      item.price = product[0].price;
+    }
+
+    // console.log(products);
+
+    const resPost = await _order.postOrder({
+      products: products,
+      userId: user.userId,
+      totalPrice: totalPrice,
+      status: "pending",
+    });
+
+    const resDelete = await _bag.deleteBag(bagId);
+
+    return { message: "success" };
+  } catch (error) {
+    console.log(error);
   }
 }

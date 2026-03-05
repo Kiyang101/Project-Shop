@@ -7,12 +7,15 @@ import useBag from "@/service/bag";
 import { getProduct } from "./action";
 import ProductRow from "./ProductRow";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import CheckoutPopup from "./CheckoutPopup";
 
 export default function Page() {
   const _bag = useBag();
   const [bags, setBags] = useState<BagData | null>([]);
   const [Quantity, setQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   interface BagData {
     bagId: number;
@@ -75,13 +78,29 @@ export default function Page() {
               </tbody>
             )}
           </table>
-          <div className="sticky bottom-10 flex justify-center z-50 my-10">
-            <Button className="p-7 px-15 text-3xl cursor-pointer">
-              Checkout
-            </Button>
-          </div>
+          {bags && bags.products && bags.products.length > 0 && (
+            <div className="sticky bottom-10 flex justify-center z-20 my-10">
+              <Button
+                className="p-7 px-15 text-3xl cursor-pointer"
+                onClick={() => setCheckoutOpen(true)}
+              >
+                Checkout
+              </Button>
+            </div>
+          )}
         </div>
       </div>
+      {checkoutOpen && bags && (
+        <>
+          <div className="fixed inset-0 z-20 bg-black/50"></div>
+
+          <CheckoutPopup
+            isOpen={checkoutOpen}
+            onClose={() => setCheckoutOpen(false)}
+            bagData={bags}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect, use } from "react";
-import { getProduct } from "./action"; // Adjust path as needed
+import { useState, useEffect } from "react";
+import { getProduct } from "./action";
 import ImageById from "@/components/ImageById";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";

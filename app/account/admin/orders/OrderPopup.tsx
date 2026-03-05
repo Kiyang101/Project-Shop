@@ -83,11 +83,11 @@ export default function OrderPopup({ order, onClose, onSave }) {
                 </div>
                 <div className="text-right">
                   <p className="text-gray-800">
-                    {prod.quantity} x ฿{""}
                     {prod.price.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}
+                    })}{" "}
+                    THB x {prod.quantity}
                   </p>
                 </div>
               </div>

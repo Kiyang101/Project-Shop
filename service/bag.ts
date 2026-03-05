@@ -38,6 +38,15 @@ export default function bag() {
     }
   };
 
-  const func = { getBag, postBag, putBag };
+  const deleteBag = async (id) => {
+    try {
+      const res = await axios.delete(`/api/users/bag/${id}`);
+      return res.data;
+    } catch (err) {
+      console.error("Error fetching wishlist:", err);
+    }
+  };
+
+  const func = { getBag, postBag, putBag, deleteBag };
   return func;
 }

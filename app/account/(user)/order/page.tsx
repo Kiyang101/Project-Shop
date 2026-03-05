@@ -24,33 +24,6 @@ export default function Page() {
     return <div>Loading...</div>;
   }
 
-  // Mock data matching the screenshot
-  // const orders = [
-  //   {
-  //     id: "001",
-  //     date: "20 Apr 2026",
-  //     status: "Delivered",
-  //     items: [
-  //       { name: "Rayna Pleated Midi Dress", qty: 1, price: "16,000 THB" },
-  //     ],
-  //     total: "16,000 THB",
-  //   },
-  //   {
-  //     id: "05",
-  //     date: "27 Apr 2026",
-  //     status: "Paid",
-  //     items: [
-  //       { name: "Cecelia Sculpted Seam Dress", qty: 1, price: "14,000 THB" },
-  //       {
-  //         name: "Asava Floral-lace Cropped Jacket",
-  //         qty: 1,
-  //         price: "28,000 THB",
-  //       },
-  //     ],
-  //     total: "42,000 THB",
-  //   },
-  // ];
-
   return (
     <div className="max-w-5xl mx-auto p-6 font-sans">
       {/* Custom Header with Side Lines */}
