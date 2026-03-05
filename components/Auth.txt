@@ -1,0 +1,54 @@
+import {
+  Tabs,
+  TabsContent,
+  TabsContents,
+  TabsList,
+  TabsTrigger,
+} from "@/components/animate-ui/components/animate/tabs";
+
+import Login from "./Login";
+import Register from "./Register";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export default function Auth({ onClose }: { onClose: () => void }) {
+  return (
+    <>
+      <div
+        className="fixed inset-0 z-[15] blur bg-[rgba(0,0,0,0.7)] hover:cursor-pointer"
+        onClick={onClose}
+      ></div>
+
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 select-none">
+        <div className="z-[21] absolute top-0 right-0 pr-3 p-14">
+          <FontAwesomeIcon
+            icon={faXmark}
+            inverse
+            className="hover:cursor-pointer"
+            onClick={onClose}
+          />
+        </div>
+        <Tabs>
+          <TabsList>
+            <TabsTrigger value="register" className="hover:cursor-pointer">
+              Register
+            </TabsTrigger>
+            <TabsTrigger value="login" className="hover:cursor-pointer">
+              Login
+            </TabsTrigger>
+          </TabsList>
+          <div className="w-[400px] h-[400px]">
+            <TabsContents className="">
+              <TabsContent value="register">
+                <Register />
+              </TabsContent>
+              <TabsContent value="login">
+                <Login />
+              </TabsContent>
+            </TabsContents>
+          </div>
+        </Tabs>
+      </div>
+    </>
+  );
+}

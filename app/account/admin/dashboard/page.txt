@@ -1,0 +1,114 @@
+"use client";
+import { useState, useEffect } from "react";
+import useProduct from "@/service/product";
+import useUser from "@/service/user";
+import ImageById from "@/components/ImageById";
+import { Logout } from "./action";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "@/components/animate-ui/components/buttons/button";
+
+export default function Page() {
+  const _user = useUser();
+  const _product = useProduct();
+  const [products, setProducts] = useState([]);
+  const [user, setUser] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const initProduct = async () => {
+    const product = await _product.getAllProduct();
+    setProducts(product);
+  };
+  const initUser = async () => {
+    const user = await _user.getUser();
+    const all_users = await _user.getAllUser(user);
+    // console.log(all_users);
+    setUser(user);
+    setAllUsers(all_users);
+  };
+
+  useEffect(() => {
+    initProduct();
+    initUser();
+  }, []);
+  //   useEffect(() => {
+  //     console.log(products);
+  //     console.log(user);
+  //     console.log(allUsers);
+  //   }, [products, user, allUsers]);
+  const price = 1000000;
+
+  return (
+    <>
+      <div className="">
+        <div className="flex justify-between">
+          <h1 className="text-2xl">
+            <strong>Dashboard</strong> Welcome <strong>ELVIOGROUP</strong> Admin
+          </h1>
+          <Button className="text-lg p-5">LOGOUT</Button>
+        </div>
+
+        <div className="flex justify-around mt-5 mx-7">
+          <div className="w-1/4 bg-white rounded-xl shadow-2xl p-5">
+            <h1 className="text-xl">Total Sales</h1>
+            <div className="text-3xl">
+              <strong>
+                {price.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{" "}
+                THB
+              </strong>
+            </div>
+            <div className="flex justify-between">
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <div className="w-1/4 bg-white rounded-xl shadow-2xl p-5">
+            <h1 className="text-xl">Total Orders</h1>
+            <div className="text-3xl text-center">
+              <strong>5 Orders</strong>
+            </div>
+            <div className="">
+              <div></div>
+            </div>
+          </div>
+          <div className="w-1/4 bg-white rounded-xl shadow-2xl p-5">
+            <h1 className="text-xl">Total Customers</h1>
+            <div className="text-3xl">
+              <strong>{allUsers.length} Customers</strong>
+            </div>
+            <div className="">
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-2xl p-5 mt-10 mx-20 pr-10">
+          <div className="flex justify-between">
+            <h1 className="text-2xl">
+              <strong>Proportion od clothing orders</strong>
+            </h1>
+            <div className="gap-10 flex text-xl">
+              <span className="gap-2 flex text-xl items-center">
+                <FontAwesomeIcon icon={faCircle} />
+                <span>SKIRT</span>
+              </span>
+              <span className="gap-2 flex text-xl items-center">
+                <FontAwesomeIcon icon={faCircle} className="text-gray-500" />
+                <span>SWEATER</span>
+              </span>
+              <span className="gap-2 flex text-xl items-center">
+                <FontAwesomeIcon icon={faCircle} className="text-gray-500" />
+                PANTS
+              </span>
+            </div>
+          </div>
+          <div className="flex ">
+            <div className="w-3/10"></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

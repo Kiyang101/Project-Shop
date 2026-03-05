@@ -1,0 +1,81 @@
+import { Button } from "@/components/animate-ui/components/buttons/button";
+import Image from "next/image";
+
+export default function Page({ params }) {
+  return (
+    <>
+      <div className="px-5 pt-4 mx-5">
+        <div className="flex justify-center">
+          <div className="justify-start">
+            <div className=" justify-center flex w-full">
+              <div className="group overflow-hidden relative w-[25%]">
+                <div className="absolute inset-0 m-2  items-center flex justify-center group-hover:blur">
+                  <Image
+                    src={"/test11.jpg"}
+                    fill
+                    alt="11"
+                    className="object-cover"
+                  />
+                  <h1 className="text-white text-7xl">Product Picture</h1>
+                </div>
+                <div className="absolute w-full h-full group-hover:opacity-100 opacity-0 group-hover:translate-y-0 translate-y-full  transition-all duration-300 ease-in-out top-[40%]">
+                  <div className="flex justify-center ">
+                    <h1 className="text-white text-7xl">test</h1>
+                  </div>
+                </div>
+              </div>
+              <div className="group overflow-hidden relative w-[25%] ">
+                <div className="absolute inset-0 m-2  items-center flex justify-center group-hover:blur">
+                  <Image
+                    src={"/test11.jpg"}
+                    fill
+                    alt="11"
+                    className="object-cover"
+                  />
+                  <h1 className="text-white text-7xl">Product Picture</h1>
+                </div>
+                <div className="absolute w-full h-full group-hover:opacity-100 opacity-0 group-hover:translate-y-0 translate-y-full  transition-all duration-300 ease-in-out top-[40%]">
+                  <div className="flex justify-center ">
+                    <h1 className="text-white text-7xl">test</h1>
+                  </div>
+                </div>
+              </div>
+              <div className="group overflow-hidden relative w-[25%]">
+                <div className="absolute inset-0 m-2  items-center flex justify-center group-hover:blur">
+                  <Image
+                    src={"/test11.jpg"}
+                    fill
+                    alt="11"
+                    className="object-cover"
+                  />
+                  <h1 className="text-white text-7xl">Product Picture</h1>
+                </div>
+                <div className="absolute w-full h-full group-hover:opacity-100 opacity-0 group-hover:translate-y-0 translate-y-full  transition-all duration-300 ease-in-out top-[40%]">
+                  <div className="flex justify-center ">
+                    <h1 className="text-white text-7xl">test</h1>
+                  </div>
+                </div>
+              </div>
+              <div className="group overflow-hidden relative w-[500px] h-[700px] ">
+                <div className="absolute inset-0 m-2  items-center flex justify-center group-hover:blur">
+                  <Image
+                    src={"/test11.jpg"}
+                    fill
+                    alt="11"
+                    className="object-cover"
+                  />
+                  <h1 className="text-white text-7xl">Product Picture</h1>
+                </div>
+                <div className="absolute w-full h-full group-hover:opacity-100 opacity-0 group-hover:translate-y-0 translate-y-full  transition-all duration-300 ease-in-out top-[40%]">
+                  <div className="flex justify-center ">
+                    <h1 className="text-white text-7xl">test</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
