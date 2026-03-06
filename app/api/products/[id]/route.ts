@@ -81,3 +81,38 @@ export async function DELETE(request: NextRequest, { params }) {
     return Response.json({ message: "fail", error: error.message });
   }
 }
+
+export async function PUT(request: NextRequest, { params }) {
+  try {
+    const { id } = await params;
+    const bodyData = await request.json();
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const secret_key = process.env.SECRET_KEY as string;
+    const _user = jwt.verify(token, secret_key) as any;
+
+    if (!_user && _user.role !== "admin") {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const quantity = bodyData.quantity;
+    if (!quantity) {
+      return Response.json({ message: "quantity is required" });
+    }
+    const q = `UPDATE products SET "quantity" = $1 WHERE "productId" = $2`;
+    const result = await database.query(q, [quantity, id]);
+    return Response.json({ message: "success" });
+  } catch (error) {
+    return Response.json({ message: "fail", error: error.message });
+  }
+}

@@ -87,6 +87,16 @@ export default function product() {
     }
   };
 
+  const updateStock = async (id: Number, data: { quantity: Number }) => {
+    try {
+      const res = await axios.put(`/api/products/${id}`, data);
+      return res.data;
+    } catch (err) {
+      console.error("Upload failed:", err);
+      return {};
+    }
+  };
+
   const func = {
     postProduct,
     getProductByCategory,
@@ -97,6 +107,7 @@ export default function product() {
     postSeasonProduct,
     deleteSeasonProduct,
     deleteProduct,
+    updateStock,
   };
   return func;
 }

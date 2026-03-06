@@ -163,6 +163,13 @@ export async function postOrder_handler(data) {
 
     const resDelete = await _bag.deleteBag(bagId);
 
+    for (const item of products) {
+      const product = await _product.getProductById(item.productId);
+      const resStock = await _product.updateStock(item.productId, {
+        quantity: product[0].quantity - item.quantity,
+      });
+    }
+
     return { message: "success" };
   } catch (error) {
     console.log(error);
