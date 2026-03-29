@@ -2,7 +2,7 @@ import ImageById from "@/components/ImageById";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { useState, useEffect } from "react";
 import useProduct from "@/service/product";
-export default function Page({ id }) {
+export default function Page({ id, onRefresh }) {
   const productId = id.productId;
   const _product = useProduct();
   const [product, setProduct] = useState(null);
@@ -30,7 +30,8 @@ export default function Page({ id }) {
     const id = productId;
     await _product.deleteSeasonProduct(id);
 
-    window.location.reload();
+    // window.location.reload();
+    onRefresh();
   };
 
   return (
@@ -41,7 +42,7 @@ export default function Page({ id }) {
             <div className="">
               <ImageById
                 imageId={product.images[0].imageId}
-                className={""}
+                className={"rounded-sm"}
                 orientation=""
               />
             </div>

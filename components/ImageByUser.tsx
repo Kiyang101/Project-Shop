@@ -8,7 +8,7 @@ export default function ImageByUser(prop) {
   if (error)
     return (
       <img
-        src="/image/elon.webp"
+        src="/image/user_default.webp"
         className={`${baseClasses} ${className}`}
         alt=""
         loading="eager"

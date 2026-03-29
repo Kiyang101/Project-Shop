@@ -56,19 +56,6 @@ export default function Page() {
 
   return (
     <>
-      {/* 1. Render as a React Component and ensure products[0] exists before rendering */}
-      {/* {editingProduct && (
-        <ShowEditProduct
-          product={editingProduct}
-          onClose={() => {
-            setEditingProduct(null);
-            sessionStorage.setItem("scrollPosition", window.scrollY);
-            window.location.reload();
-          }}
-          onRefresh={initProduct}
-        />
-      )} */}
-
       {toggleAdd && (
         <>
           <div className="fixed inset-0 z-50 bg-black/50"></div>
@@ -78,72 +65,53 @@ export default function Page() {
           />
         </>
       )}
-      <div className="flex justify-between ml-10">
-        <h1 className="text-2xl">
-          <strong>Season Products</strong>
-          <br />
-          Manage Season Products Listing
-        </h1>
-        <div className="gap-5 w-1/3 flex justify-around">
-          <Button
-            className="text-lg p-5 cursor-pointer"
-            onClick={() => setToggleAdd(true)}
-          >
-            Add Product
-          </Button>
-          <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
-            LOGOUT
-          </Button>
-        </div>
-      </div>
-      {/* <div className="w-9.5/10 mt-5 mx-10">
-        <form className="text-black">
-          <div className="relative">
-            <input
-              type="text"
-              id="search"
-              className=" block w-full p-3 ps-9 bg-neutral-secondary-medium border text-heading border-black
-                    text-lg rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body rounded-3xl"
-              placeholder="Search Product"
-              required
-              suppressHydrationWarning={true}
-            />
-            <button
-              type="button"
-              className="absolute inset-e-1.5 bottom-1.5 text-xl border-transparent shadow-xs font-medium leading-5 rounded px-3 py-1.5 focus:outline-none hover:cursor-pointer"
+
+      <div className="min-h-screen bg-gray-50 p-8 text-gray-800 rounded-2xl">
+        <div className="flex justify-between">
+          <h1 className="text-2xl">
+            <strong>Season Products</strong>
+            <br />
+            Manage Season Products Listing
+          </h1>
+          <div className="gap-5 flex justify-around">
+            <Button
+              className="text-lg p-5 cursor-pointer"
+              onClick={() => setToggleAdd(true)}
             >
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-1" />
-              {""}
-            </button>
+              Add Product
+            </Button>
+            <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
+              LOGOUT
+            </Button>
           </div>
-        </form>
-      </div> */}
-      <div className="flex justify-center mt-5">
-        <div className="w-[95%] mx-auto bg-white">
-          <table className="w-full border-collapse">
-            {/* ส่วนหัวตาราง (Table Header) */}
-            <thead className="bg-gray-300">
-              <tr className="border-b  border-gray-300 h-16 uppercase">
-                {/* กำหนดความสูงแถว */}
-                <th className="w-[25%] align-middle text-left pl-5">Product</th>
-                <th className="w-[65%] align-middle text-left pl-5">
-                  Product Name
-                </th>
-                {/* <th className="w-[10%] align-middle text-center">Price</th>
-                <th className="w-[10%] align-middle text-center">Stock</th>
-                <th className="w-[10%] align-middle text-center">Status</th> */}
-                <th className="w-[10%] align-middle text-center">Delete</th>
-              </tr>
-            </thead>
-            {/* ส่วนเนื้อหา (Table Body) */}
-            {products && (
-              <tbody className="">
-                {products.map((productId, index) => (
-                  <ProductList key={index} id={productId} />
-                ))}
-              </tbody>
-            )}
-          </table>
+        </div>
+        <div className="flex justify-center mt-5">
+          <div className="w-full mx-auto bg-white overflow-hidden rounded-xl shadow-sm border border-gray-100">
+            <table className="w-full border-collapse">
+              <thead className="bg-white text-gray-400">
+                <tr className="border-b  border-gray-300 h-16 ">
+                  <th className="w-[25%] align-middle text-left pl-5">
+                    Product
+                  </th>
+                  <th className="w-[65%] align-middle text-left pl-5">
+                    Product Name
+                  </th>
+                  <th className="w-[10%] align-middle text-center">Action</th>
+                </tr>
+              </thead>
+              {products && (
+                <tbody className="">
+                  {products.map((productId, index) => (
+                    <ProductList
+                      key={index}
+                      id={productId}
+                      onRefresh={initProduct}
+                    />
+                  ))}
+                </tbody>
+              )}
+            </table>
+          </div>
         </div>
       </div>
     </>

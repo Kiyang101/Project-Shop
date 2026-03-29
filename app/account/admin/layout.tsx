@@ -4,6 +4,8 @@ import {
   faShirt,
   faBasketShopping,
   faHeart,
+  faClockRotateLeft,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -13,26 +15,33 @@ export default async function Layout({
   return (
     <>
       <div className="flex h-[75.5dvh] w-full overflow-hidden">
-        <div className="flex w-1/5 bg-black text-white justify-center h-full">
+        <div className="flex w-1/5 bg-black text-white overflow-y-auto justify-center h-full">
           <div>
             <Link
               href="/account/admin/dashboard"
-              className="py-10 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+              className="pb-8 pt-15 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
             >
               <FontAwesomeIcon icon={faChartLine} className="text-2xl" />
 
               <h1 className="text-xl m-0">Dashboard</h1>
             </Link>
             <Link
+              href="/account/admin/users"
+              className="py-8 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+            >
+              <FontAwesomeIcon icon={faUser} className="text-2xl" />
+              <h1 className="text-xl">Users</h1>
+            </Link>
+            <Link
               href="/account/admin/products"
-              className="py-10 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+              className="py-8 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
             >
               <FontAwesomeIcon icon={faShirt} className="text-2xl" />
               <h1 className="text-xl">Products</h1>
             </Link>
             <Link
               href="/account/admin/season-products"
-              className="py-10 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+              className="py-8 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
             >
               <FontAwesomeIcon icon={faShirt} className="text-2xl" />
 
@@ -40,7 +49,7 @@ export default async function Layout({
             </Link>
             <Link
               href="/account/admin/orders"
-              className="py-10 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+              className="py-8 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
             >
               <FontAwesomeIcon icon={faBasketShopping} className="text-2xl" />
 
@@ -48,11 +57,19 @@ export default async function Layout({
             </Link>
             <Link
               href="/account/admin/wishlist"
-              className="py-10 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+              className="py-8 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
             >
               <FontAwesomeIcon icon={faHeart} className="text-2xl" />
 
               <h1 className="text-xl">Wishlist</h1>
+            </Link>
+            <Link
+              href="/account/admin/history"
+              className="py-8 pb-15 flex items-center gap-3 cursor-pointer hover:scale-110 transition-all ease-in-out duration-300"
+            >
+              <FontAwesomeIcon icon={faClockRotateLeft} className="text-2xl" />
+
+              <h1 className="text-xl">History</h1>
             </Link>
           </div>
         </div>

@@ -33,7 +33,7 @@ export async function proxy(request: NextRequest) {
   // ----------------------------------------------------
   // 1. PRODUCT ROUTES
   // ----------------------------------------------------
-  if (pathname.startsWith("/product/")) {
+  if (pathname.startsWith("/product")) {
     if (!user) {
       return NextResponse.redirect(new URL("/login", request.url));
     }

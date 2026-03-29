@@ -32,6 +32,16 @@ export default function user() {
     }
   };
 
+  const updateUserRole = async (payload) => {
+    try {
+      const res = await axios.put("/api/users", payload);
+      return res.data;
+    } catch (err) {
+      console.error("Upload failed:", err);
+      return {};
+    }
+  };
+
   const updateImage = async (payload) => {
     try {
       const data = new FormData();
@@ -86,6 +96,7 @@ export default function user() {
   const func = {
     getUser,
     getAllUser,
+    updateUserRole,
     updateImage,
     updateData,
     getAddress,

@@ -77,14 +77,13 @@ export default function ProductSelectorModal({
                 return (
                   // ${selectedId === product.productId ? "border-2 border-red-500" : ""}
                   <div
-                    className={`h-14 w-6 rounded-sm ${selectedId === product.productId ? "border-2 border-red-500" : ""}`}
                     key={product.productId}
                     onClick={() => setSelectedId(product.productId)}
                   >
                     {/* <h1>{product.productName}</h1> */}
                     <ImageById
                       imageId={product.imageIds[0]}
-                      className={`cursor-pointer rounded-sm ${selectedId === product.productId ? "border-2 border-red-500" : ""}`}
+                      className={`cursor-pointer rounded-lg ${selectedId === product.productId ? "border-3 border-green-500" : ""}`}
                     />
                   </div>
                 );
@@ -95,8 +94,10 @@ export default function ProductSelectorModal({
 
         {/* Footer */}
         <div className="p-4 border-t bg-gray-50 rounded-b-lg">
-          <div className="flex justify-end">
-            <Button onClick={handleOk}>Ok</Button>
+          <div className="flex justify-end ">
+            <Button onClick={handleOk} className="cursor-pointer px-6">
+              Ok
+            </Button>
           </div>
         </div>
       </div>

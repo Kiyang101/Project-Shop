@@ -8,11 +8,11 @@ export default function Page() {
   const [orders, setOrders] = useState(null);
 
   const [activeTab, setActiveTab] = useState("all");
-  const tabs = ["all", "pending", "paid", "delivered", "cancel"];
+  const tabs = ["all", "pending", "paid", "delivered", "cancelled", "complete"];
 
   const initOrder = async () => {
     const order = await _order.getOrder();
-    console.log(order);
+    // console.log(order);
     setOrders(order);
   };
 
@@ -36,7 +36,7 @@ export default function Page() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-[#e5e5e5] inline-flex rounded-t-md mb-4 overflow-x-auto">
+      <div className="bg-[#e5e5e5] inline-flex rounded-t-md mb-4 overflow-x-auto ">
         {tabs.map((tab) => (
           <button
             key={tab}

@@ -20,8 +20,8 @@ export default function AddImage({ imageId, onClose, onRefresh }) {
   );
   useEffect(() => {
     if (stateProductImage?.message === "success") {
-      onRefresh(); // Re-fetches the products
-      onClose(); // Closes the Add Image modal
+      onRefresh();
+      onClose();
     }
   }, [stateProductImage, onRefresh, onClose]);
 

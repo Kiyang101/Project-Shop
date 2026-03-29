@@ -182,7 +182,8 @@ export default function Page() {
                         <AlertDialog>
                           <AlertDialogTrigger
                             type="submit"
-                            className="text-xl px-5 py-3 hover:cursor-pointer w-full bg-black text-white rounded-xl cursor-pointer hover:scale-105 transition-all duration-200 ease-in-out"
+                            disabled={!product.active}
+                            className={`${product.active ? "" : "opacity-50"} text-xl px-5 py-3 hover:cursor-pointer w-full bg-black text-white rounded-xl cursor-pointer hover:scale-105 transition-all duration-200 ease-in-out`}
                           >
                             Add to Bag
                           </AlertDialogTrigger>

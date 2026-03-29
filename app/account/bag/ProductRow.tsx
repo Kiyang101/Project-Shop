@@ -18,7 +18,13 @@ import {
   AlertDialogAction,
 } from "@/components/animate-ui/components/radix/alert-dialog";
 
-export default function ProductRow({ item }: { item: any }) {
+export default function ProductRow({
+  item,
+  onRefresh,
+}: {
+  item: any;
+  onRefresh: () => void;
+}) {
   interface BagData {
     bagId: number;
     userId: number;
@@ -70,8 +76,8 @@ export default function ProductRow({ item }: { item: any }) {
       </tr>
     );
   }
-  const handleDelete = () => {
-    deleteProductFromBag(product.productId, size);
+  const handleDelete = async () => {
+    await deleteProductFromBag(product.productId, size);
   };
 
   const handleDecrement = (e: React.MouseEvent) => {
@@ -162,7 +168,10 @@ export default function ProductRow({ item }: { item: any }) {
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="cursor-pointer text-xl"
-                  onClick={handleDelete}
+                  onClick={async () => {
+                    await handleDelete();
+                    onRefresh();
+                  }}
                 >
                   Confirm
                 </AlertDialogAction>

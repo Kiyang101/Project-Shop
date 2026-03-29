@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  allowedDevOrigins: ["*.ngrok-free.app"],
+  allowedDevOrigins: ["*.ngrok-free.app", "*.ngrok-free.dev"],
   reactCompiler: true,
   async rewrites() {
     return [

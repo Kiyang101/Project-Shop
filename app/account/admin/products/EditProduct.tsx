@@ -177,7 +177,7 @@ export default function EditProduct({ product, onClose, onRefresh }) {
             type="checkbox"
             name="active"
             id="active"
-            defaultChecked={product.active}
+            defaultChecked={product?.active || false}
             className="w-5 h-5 accent-slate-600 transition-all ease-in-out duration-300"
           />
           <label htmlFor="active" className="font-semibold">

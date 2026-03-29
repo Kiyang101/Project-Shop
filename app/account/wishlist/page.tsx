@@ -35,7 +35,7 @@ export default function Page() {
         <div className="flex justify-center items-center my-5">
           <div className="text-center">
             <h1 className="text-2xl">
-              WELLCOME {user.name} {user.surName}
+              WELCOME {user.name} {user.surName}
             </h1>
             <h1 className="text-lg text-gray-400">
               here you can keep track of your recent activity. view and edit
@@ -52,6 +52,9 @@ export default function Page() {
                     productId={item.productId}
                     key={item.id}
                     id={item.id}
+                    onRefresh={() => {
+                      initWishlist();
+                    }}
                   />
                 );
               })}

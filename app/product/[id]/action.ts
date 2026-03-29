@@ -59,6 +59,8 @@ export async function postBag_handler(
       bagId: bagData.bagId,
     });
 
+    window.dispatchEvent(new Event("update-bag"));
+
     return { message: "success" };
   } catch (error) {
     console.log(error);

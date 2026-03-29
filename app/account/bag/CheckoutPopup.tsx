@@ -28,7 +28,6 @@ export default function CheckoutPopup({ isOpen, onClose, bagData }) {
     });
     if (res?.message === "success") {
       onClose();
-      window.location.reload();
     }
   };
 

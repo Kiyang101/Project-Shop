@@ -87,12 +87,25 @@ export default function product() {
     }
   };
 
-  const updateStock = async (id: Number, data: { quantity: Number }) => {
+  const updateStockandSold = async (
+    id: Number,
+    data: { quantity: Number; sold: Number },
+  ) => {
     try {
       const res = await axios.put(`/api/products/${id}`, data);
       return res.data;
     } catch (err) {
       console.error("Upload failed:", err);
+      return {};
+    }
+  };
+
+  const searchProduct = async (query: string) => {
+    try {
+      const res = await axios.get(`/api/products/search/${query}`);
+      return res.data;
+    } catch (err) {
+      console.error("Search failed:", err);
       return {};
     }
   };
@@ -107,7 +120,8 @@ export default function product() {
     postSeasonProduct,
     deleteSeasonProduct,
     deleteProduct,
-    updateStock,
+    updateStockandSold,
+    searchProduct,
   };
   return func;
 }

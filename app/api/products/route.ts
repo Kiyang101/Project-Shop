@@ -1,4 +1,49 @@
 import database from "@/service/database";
+import jwt from "jsonwebtoken";
+
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get all products
+ *     description: Retrieves a list of all products including their associated image IDs.
+ *     tags:
+ *       - Products
+ *     responses:
+ *       200:
+ *         description: A list of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: integer
+ *                   productName:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   sold:
+ *                     type: integer
+ *                   rating:
+ *                     type: number
+ *                   active:
+ *                     type: boolean
+ *                   quantity:
+ *                     type: integer
+ *                   size:
+ *                     type: string
+ *                   category:
+ *                     type: string
+ *                   imageIds:
+ *                     type: array
+ *                     items:
+ *                       type: integer
+ */
 
 export async function GET() {
   try {
@@ -43,8 +88,30 @@ export async function POST(request: Request) {
   const category = bodyData.category || "";
 
   try {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const secret_key = process.env.SECRET_KEY as string;
+    const _user = jwt.verify(token, secret_key) as any;
+
+    if (!_user || _user.role !== "admin") {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
     if (!productName || !price || !quantity) {
-      return;
+      return Response.json(
+        { message: "Missing required fields" },
+        { status: 400 },
+      );
     }
     const qc = `SELECT "productId", "productName" FROM products WHERE "productName" = $1`;
     const chk = await database.query(qc, [productName]);
@@ -74,6 +141,25 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   const bodyData = await request.json();
   try {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const secret_key = process.env.SECRET_KEY as string;
+    const _user = jwt.verify(token, secret_key) as any;
+
+    if (!_user || _user.role !== "admin") {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
     const {
       productId,
       productName,

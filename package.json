@@ -23,10 +23,12 @@
     "lucide-react": "^0.575.0",
     "motion": "^12.34.3",
     "next": "16.1.6",
+    "next-swagger-doc": "^0.4.1",
     "pg": "^8.18.0",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "swagger-ui-react": "^5.32.1",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

@@ -1,10 +1,19 @@
 import React from "react";
 
 export default function OrderCard({ order }) {
-  // Default fallback data to demonstrate the component if no prop is passed
   const currentOrder = order;
 
-  const orderSteps = ["order Placed", "pending", "paid", "delivered"];
+  // 1. Added "complete" to the standard linear flow
+  const orderSteps = [
+    "order Placed",
+    "pending",
+    "paid",
+    "delivered",
+    "complete",
+  ];
+
+  // 2. Check if the order is cancelled (handles case variations safely)
+  const isCancelled = currentOrder.status?.toLowerCase() === "cancelled";
 
   // Find the index of the current status to calculate progress
   const currentStatusIndex = orderSteps.indexOf(currentOrder.status);
@@ -17,11 +26,12 @@ export default function OrderCard({ order }) {
       year: "numeric",
     });
   };
+
   return (
     <div className="max-w-md w-full bg-[#f0f0f0] p-6 rounded-lg font-sans text-gray-800 shadow-sm border border-gray-200">
       {/* Header Section */}
       <div className="flex justify-between items-center pb-4">
-        <h2 className="text-lg font-bold text-gray-900">
+        <h2 className="text-lg font-bold text-gray-900 ">
           Order #{currentOrder.orderId}
         </h2>
         <span className="text-sm text-gray-500">
@@ -33,41 +43,59 @@ export default function OrderCard({ order }) {
 
       {/* Status Section */}
       <div className="pb-6">
-        <h3 className="text-sm text-gray-700 mb-4 font-medium">Status</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm text-gray-700 font-medium">Status</h3>
 
-        {/* Progress Bar Container */}
-        <div className="relative flex justify-between items-center px-2 sm:px-4">
-          {/* Background Line (Inactive) */}
-          <div className="absolute top-[6px] left-8 right-8 h-0.5 bg-gray-300 z-0">
-            {/* Foreground Line (Active) */}
-            <div
-              className="h-full bg-black transition-all duration-500 ease-in-out"
-              style={{
-                width: `${(Math.max(0, currentStatusIndex) / (orderSteps.length - 1)) * 100}%`,
-              }}
-            ></div>
-          </div>
-
-          {/* Status Nodes */}
-          {orderSteps.map((step, index) => {
-            const isCompleted = index <= currentStatusIndex;
-
-            return (
-              <div key={index} className="flex flex-col items-center z-10 w-16">
-                <div
-                  className={`w-3.5 h-3.5 rounded-full mb-2 outline outline-2 outline-[#f0f0f0] transition-colors duration-500 
-                    ${isCompleted ? "bg-black" : "bg-gray-300"}`}
-                ></div>
-                <span
-                  className={`text-[11px] sm:text-xs text-center capitalize whitespace-nowrap transition-colors duration-500
-                    ${isCompleted ? "text-gray-900 font-medium" : "text-gray-500"}`}
-                >
-                  {step}
-                </span>
-              </div>
-            );
-          })}
+          {/* 3. Render a Cancelled badge in the header if applicable */}
+          {isCancelled && (
+            <span className="text-[10px] sm:text-xs font-bold text-red-700 bg-red-100 px-2 py-1 rounded-md uppercase tracking-wide">
+              Cancelled
+            </span>
+          )}
         </div>
+
+        {/* 4. Progress Bar Container: Hide if cancelled and show an alert instead */}
+        {isCancelled ? (
+          <div className="bg-red-50 p-3 rounded-md text-sm text-red-800 border border-red-200">
+            This order was cancelled and will not be processed.
+          </div>
+        ) : (
+          <div className="relative flex justify-between items-center px-2 sm:px-4">
+            {/* Background Line (Inactive) */}
+            <div className="absolute top-[6px] left-8 right-8 h-0.5 bg-gray-300 z-0">
+              {/* Foreground Line (Active) */}
+              <div
+                className="h-full bg-black transition-all duration-500 ease-in-out"
+                style={{
+                  width: `${(Math.max(0, currentStatusIndex) / (orderSteps.length - 1)) * 100}%`,
+                }}
+              ></div>
+            </div>
+
+            {/* Status Nodes */}
+            {orderSteps.map((step, index) => {
+              const isCompleted = index <= currentStatusIndex;
+
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col items-center z-2 w-16"
+                >
+                  <div
+                    className={`w-3.5 h-3.5 rounded-full mb-2 outline outline-2 outline-[#f0f0f0] transition-colors duration-500 
+                      ${isCompleted ? "bg-black" : "bg-gray-300"}`}
+                  ></div>
+                  <span
+                    className={`text-[10px] sm:text-[11px] text-center capitalize whitespace-nowrap transition-colors duration-500
+                      ${isCompleted ? "text-gray-900 font-medium" : "text-gray-500"}`}
+                  >
+                    {step}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <hr className="border-gray-300 pb-4" />

@@ -46,7 +46,7 @@ export default function Page() {
       <div className="mb-2">
         {user && (
           <p className="text-center text-xl">
-            WELLCOME {user.name ? user.name.toUpperCase() : ""}{" "}
+            WELCOME {user.name ? user.name.toUpperCase() : ""}{" "}
             {user.surName ? user.surName.toUpperCase() : ""} !
           </p>
         )}
@@ -139,7 +139,7 @@ export default function Page() {
                 readOnly
               />
             </div>
-            <div className="text-center my-2">CHANGE PASSWORD ?</div>
+            {/* <div className="text-center my-2">CHANGE PASSWORD ?</div> */}
             <div className="w-full my-2">
               <Button className="w-full hover:cursor-pointer">SAVE</Button>
             </div>

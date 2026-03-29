@@ -6,6 +6,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Logout } from "./action";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "@/service/auth";
 
 export default function Dashboard() {
   const _user = useUser();
@@ -51,6 +52,16 @@ export default function Dashboard() {
     year: "numeric",
   });
 
+  const Logout = async () => {
+    const _auth = useAuth();
+    const res = await _auth.logout();
+    if (res.logout) {
+      window.location.href = "/login";
+      return;
+    }
+    return;
+  };
+
   // 3. Data Fetching
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -80,14 +91,17 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 text-gray-800">
+    <div className="min-h-screen bg-gray-50 p-8 text-gray-800 rounded-2xl">
       {/* Header (Always Visible) */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl text-gray-600">
           <strong className="text-black">Dashboard</strong> Welcome to{" "}
           <strong className="text-black">ELVIOGROUP</strong> Admin
         </h1>
-        <Button className="bg-black text-white px-6 py-2 rounded-md font-bold tracking-wide">
+        <Button
+          onClick={Logout}
+          className="bg-black text-white px-6 py-2 rounded-md cursor-pointer font-bold tracking-wide"
+        >
           LOGOUT
         </Button>
       </div>
@@ -113,12 +127,12 @@ export default function Dashboard() {
               <div className="text-4xl font-bold mb-2">
                 {revenue?.total?.toLocaleString("en-US") || 0} THB
               </div>
-              <div className="text-green-500 font-semibold mb-4">
+              {/* <div className="text-green-500 font-semibold mb-4">
                 ↑ {revenue?.increasePercent || 0}%{" "}
                 <span className="text-gray-400 text-sm font-normal">
                   last month
                 </span>
-              </div>
+              </div> */}
               <hr className="my-2 border-gray-200" />
               <p className="text-sm text-gray-500 mt-2">
                 Revenue Increased by{" "}
@@ -209,10 +223,10 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              <hr className="border-gray-200 mb-2" />
+              {/* <hr className="border-gray-200 mb-2" />
               <p className="text-sm text-gray-500 mt-2 text-center">
                 Average Daily Orders: {orders?.avgDaily || 0} orders/day
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -263,12 +277,12 @@ export default function Dashboard() {
                       {products?.bestSeller?.sold || 0} units sold
                     </p>
                   </div>
-                  <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                  {/* <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
                     <span className="text-gray-600">Growth Rate</span>
                     <strong className="text-green-500">
                       {products?.bestSeller?.growth || 0}%
                     </strong>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Low Performance */}
@@ -284,12 +298,12 @@ export default function Dashboard() {
                       {products?.lowPerformer?.sold || 0} units sold
                     </p>
                   </div>
-                  <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                  {/* <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
                     <span className="text-gray-600">Growth Rate</span>
                     <strong className="text-black">
                       {products?.lowPerformer?.growth || 0}%
                     </strong>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

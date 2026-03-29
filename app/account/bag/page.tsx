@@ -8,6 +8,7 @@ import { getProduct } from "./action";
 import ProductRow from "./ProductRow";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import CheckoutPopup from "./CheckoutPopup";
+import useProduct from "@/service/product";
 
 export default function Page() {
   const _bag = useBag();
@@ -73,7 +74,15 @@ export default function Page() {
                 {bags.products.map((_product, index) => {
                   const product = getProduct(_product.productId);
                   // console.log(product);
-                  return <ProductRow item={_product} key={index} />;
+                  return (
+                    <ProductRow
+                      item={_product}
+                      key={index}
+                      onRefresh={() => {
+                        initBag();
+                      }}
+                    />
+                  );
                 })}
               </tbody>
             )}
@@ -82,7 +91,10 @@ export default function Page() {
             <div className="sticky bottom-10 flex justify-center z-20 my-10">
               <Button
                 className="p-7 px-15 text-3xl cursor-pointer"
-                onClick={() => setCheckoutOpen(true)}
+                onClick={() => {
+                  initBag();
+                  setCheckoutOpen(true);
+                }}
               >
                 Checkout
               </Button>
@@ -96,7 +108,11 @@ export default function Page() {
 
           <CheckoutPopup
             isOpen={checkoutOpen}
-            onClose={() => setCheckoutOpen(false)}
+            onClose={() => {
+              setCheckoutOpen(false);
+              initBag();
+              window.location.reload();
+            }}
             bagData={bags}
           />
         </>

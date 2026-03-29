@@ -8,7 +8,7 @@ export default function ImageById(prop) {
   if (error)
     return (
       <img
-        src="/image/elon.webp"
+        src="/image/product_default.png"
         className={`${baseClasses} ${className}`}
         alt=""
         loading="eager"

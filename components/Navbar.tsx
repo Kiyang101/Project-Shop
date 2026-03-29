@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, useActionState } from "react";
 // import Auth from "./Auth";
 import useUser from "@/service/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,6 +52,18 @@ export default function Navbar() {
   useEffect(() => {
     initUser();
     initBag();
+
+    // Set up a listener for our custom event
+    const handleUpdate = () => {
+      initBag();
+    };
+
+    window.addEventListener("update-bag", handleUpdate);
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      window.removeEventListener("update-bag", handleUpdate);
+    };
   }, []);
 
   useEffect(() => {

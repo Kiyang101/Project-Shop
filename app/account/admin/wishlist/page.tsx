@@ -31,7 +31,7 @@ export default function Page() {
   const initWishlist = async () => {
     const wishlist = await _wishlist.getAllWishlist();
 
-    console.log(wishlist);
+    // console.log(wishlist);
     setWishlist(wishlist);
   };
 
@@ -67,54 +67,56 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex justify-between ml-10">
-        <h1 className="text-2xl">
-          <strong>Wish List</strong> Welcome to <strong>ELVIOGROUP</strong>{" "}
-          Admin
-        </h1>
-        <div className="gap-5 w-1/3 flex justify-end">
-          <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
-            LOGOUT
-          </Button>
+      <div className="min-h-screen bg-gray-50 p-8 text-gray-800 rounded-2xl">
+        <div className="flex justify-between ">
+          <h1 className="text-2xl">
+            <strong>Wish List</strong> Welcome to <strong>ELVIOGROUP</strong>{" "}
+            Admin
+          </h1>
+          <div className="gap-5 w-1/3 flex justify-end">
+            <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
+              LOGOUT
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="flex justify-center mt-5">
-        <div className="w-[95%] mx-auto bg-white">
-          <table className="w-full border-collapse">
-            {/* ส่วนหัวตาราง (Table Header) */}
-            <thead className="bg-gray-300">
-              <tr className="border-b  border-gray-300 h-16 uppercase">
-                {/* กำหนดความสูงแถว */}
-                <th className="w-[40%] align-middle text-left pl-5">
-                  Product Name
-                </th>
-                <th className="w-[20%] align-middle text-center pl-5">
-                  Category
-                </th>
-                <th className="w-[20%] align-middle text-center">Price</th>
-                {/* <th className="w-[10%] align-middle text-center">Stock</th>
+        <div className="flex justify-center mt-5">
+          <div className="w-full mx-auto bg-white overflow-hidden rounded-xl shadow-sm border border-gray-100">
+            <table className="w-full border-collapse">
+              {/* ส่วนหัวตาราง (Table Header) */}
+              <thead className="text-gray-400">
+                <tr className="border-b  border-gray-300 h-16">
+                  {/* กำหนดความสูงแถว */}
+                  <th className="w-[40%] align-middle text-left pl-5">
+                    Product
+                  </th>
+                  <th className="w-[20%] align-middle text-center pl-5">
+                    Category
+                  </th>
+                  <th className="w-[20%] align-middle text-center">Price</th>
+                  {/* <th className="w-[10%] align-middle text-center">Stock</th>
                       <th className="w-[10%] align-middle text-center">Status</th> */}
-                <th className="w-[20%] align-middle text-center">
-                  Wishlist Added
-                </th>
-              </tr>
-            </thead>
-            {/* ส่วนเนื้อหา (Table Body) */}
-            {items && items.length > 0 && (
-              <tbody className="">
-                {items
-                  .sort((a, b) => b.count - a.count)
-                  .map((item, index) => (
-                    <ProductList
-                      key={index}
-                      productId={item.productId}
-                      count={item.count}
-                    />
-                  ))}
-              </tbody>
-            )}
-          </table>
+                  <th className="w-[20%] align-middle text-center">
+                    Wishlist Added
+                  </th>
+                </tr>
+              </thead>
+              {/* ส่วนเนื้อหา (Table Body) */}
+              {items && items.length > 0 && (
+                <tbody className="">
+                  {items
+                    .sort((a, b) => b.count - a.count)
+                    .map((item, index) => (
+                      <ProductList
+                        key={index}
+                        productId={item.productId}
+                        count={item.count}
+                      />
+                    ))}
+                </tbody>
+              )}
+            </table>
+          </div>
         </div>
       </div>
     </>
@@ -150,7 +152,7 @@ const ProductList = ({ productId, count }) => {
           <div className="w-1/3 shadow-xl">
             <ImageById
               imageId={product.images[0].imageId}
-              className={""}
+              className={"rounded-sm"}
               orientation=""
             />
           </div>

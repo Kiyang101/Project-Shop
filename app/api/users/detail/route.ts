@@ -2,6 +2,92 @@ import jwt from "jsonwebtoken";
 import database from "@/service/database";
 import { NextRequest } from "next/server";
 
+/**
+ * @swagger
+ * /api/users/detail:
+ *   get:
+ *     summary: Get current user profile
+ *     description: Returns profile information of the logged-in user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                   example: 1
+ *                 email:
+ *                   type: string
+ *                   example: user@email.com
+ *                 name:
+ *                   type: string
+ *                   example: John
+ *                 surName:
+ *                   type: string
+ *                   example: Doe
+ *                 role:
+ *                   type: string
+ *                   example: user
+ *                 country:
+ *                   type: string
+ *                   example: Thailand
+ *                 login:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Login fail
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ *
+ *   put:
+ *     summary: Update user profile
+ *     description: Update name and surname of the logged-in user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - surName
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John
+ *               surName:
+ *                 type: string
+ *                 example: Doe
+ *     responses:
+ *       201:
+ *         description: Update success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Update Success
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
 export async function GET(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) {
@@ -15,8 +101,12 @@ export async function GET(request: NextRequest) {
     const secret_key = process.env.SECRET_KEY;
     const _user = jwt.verify(token, secret_key);
 
-    // console.log(user);
-
+    if (!_user) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
     const chk = await database.query({
       text: `SELECT * FROM users WHERE "email" = $1`,
       values: [_user.email],
@@ -98,5 +188,6 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     console.log(error);
+    return Response.json({ message: "Update Fail" }, { status: 500 });
   }
 }

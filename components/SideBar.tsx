@@ -25,7 +25,7 @@ export default function SideBar() {
           <div className="py-7 px-7 border-b border-black">
             <Link href="/account/information">
               <h1 className="hover:cursor-pointer hover:scale-110 transition-all ease-in-out duration-300">
-                ACCOUNT INFOMATION
+                ACCOUNT INFORMATION
               </h1>
             </Link>
           </div>

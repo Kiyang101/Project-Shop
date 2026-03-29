@@ -16,7 +16,7 @@ import {
   AlertDialogAction,
 } from "@/components/animate-ui/components/radix/alert-dialog";
 
-export default function ProductList({ productId, id }) {
+export default function ProductList({ productId, id, onRefresh }) {
   const [product, setProduct] = useState(null);
   const _product = useProduct();
   const _wishlist = useWishlist();
@@ -40,7 +40,8 @@ export default function ProductList({ productId, id }) {
     try {
       // Assuming deleteWishlist is an async API call
       await _wishlist.deleteWishlist(id);
-      window.location.reload();
+      // window.location.reload();
+      onRefresh();
       // router.refresh();
     } catch (error) {
       console.error("Failed to delete from wishlist:", error);
@@ -63,6 +64,7 @@ export default function ProductList({ productId, id }) {
         </div>
         <div className="text-2xl w-1/2 py-2 px-5">
           <h1 className="my-2">{product.productName}</h1>
+          <h1>{product.category}</h1>
           <h1 className="my-2">
             {product.price.toLocaleString("en-US", {
               minimumFractionDigits: 2,

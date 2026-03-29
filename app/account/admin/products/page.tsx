@@ -27,6 +27,8 @@ export default function Page() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
 
+  const [search, setSearch] = useState<String>();
+
   const [toggleAddProduct, setToggleAddProduct] = useState(false);
 
   const initProduct = async () => {
@@ -52,17 +54,6 @@ export default function Page() {
       if (!prev) return null;
       return freshProducts.find((p) => p.productId === prev.productId) || prev;
     });
-
-    setTimeout(() => {
-      const savedScrollPosition = sessionStorage.getItem("scrollPosition");
-
-      if (savedScrollPosition) {
-        // Scroll the user back down
-        window.scrollTo(0, parseInt(savedScrollPosition, 10));
-        // Delete the saved position so it doesn't trigger on normal page visits
-        sessionStorage.removeItem("scrollPosition");
-      }
-    }, 100);
   };
   useEffect(() => {
     initProduct();
@@ -78,8 +69,7 @@ export default function Page() {
             product={editingProduct}
             onClose={() => {
               setEditingProduct(null);
-              sessionStorage.setItem("scrollPosition", window.scrollY);
-              window.location.reload();
+              initProduct();
             }}
             onRefresh={initProduct}
           />
@@ -97,34 +87,35 @@ export default function Page() {
         </>
       )}
 
-      <div className="flex justify-between ml-10">
-        <h1 className="text-2xl">
-          <strong>Products</strong>
-          <br />
-          Manage Products Listing
-        </h1>
-        <div className="flex justify-around gap-5">
-          <Button
-            className="text-lg p-5 cursor-pointer"
-            onClick={() => setToggleAddProduct(true)}
-          >
-            Add Product
-          </Button>
-          <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
-            LOGOUT
-          </Button>
+      <div className="min-h-screen bg-gray-50 p-8 text-gray-800 rounded-2xl">
+        <div className="flex justify-between">
+          <h1 className="text-2xl">
+            <strong>Products</strong>
+            <br />
+            Manage Products Listing
+          </h1>
+          <div className="flex justify-around gap-5">
+            <Button
+              className="text-lg p-5 cursor-pointer"
+              onClick={() => setToggleAddProduct(true)}
+            >
+              Add Product
+            </Button>
+            <Button className="text-lg p-5 cursor-pointer" onClick={Logout}>
+              LOGOUT
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className="w-9.5/10 mt-5 mx-10">
-        <form className="text-black">
+        <div className="w-9.5/10 mt-5 mx-2 text-black">
           <div className="relative">
             <input
               type="text"
-              id="search"
               className=" block w-full p-3 ps-9 bg-neutral-secondary-medium border text-heading border-black
                     text-lg rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body rounded-3xl"
-              placeholder="Search Product"
-              required
+              placeholder="Search Product Name"
+              onChange={() => {
+                setSearch(String(event.target.value));
+              }}
               suppressHydrationWarning={true}
             />
             <button
@@ -135,89 +126,103 @@ export default function Page() {
               {""}
             </button>
           </div>
-        </form>
-      </div>
-      <div className="flex justify-center mt-5">
-        <div className="w-[95%] mx-auto bg-white">
-          <table className="w-full border-collapse">
-            {/* ส่วนหัวตาราง (Table Header) */}
-            <thead className="bg-gray-300">
-              <tr className="border-b  border-gray-300 h-16 uppercase">
-                {/* กำหนดความสูงแถว */}
-                <th className="w-[25%] align-middle text-left pl-5">Product</th>
-                <th className="w-[10%] align-middle text-center">Category</th>
-                <th className="w-[10%] align-middle text-center">Price</th>
-                <th className="w-[10%] align-middle text-center">Stock</th>
-                <th className="w-[10%] align-middle text-center">Status</th>
-                <th className="w-[10%] align-middle text-center">Action</th>
-              </tr>
-            </thead>
+        </div>
+        <div className="flex justify-center mt-5 ">
+          <div className="w-full mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
+            <table className="w-full border-collapse">
+              {/* ส่วนหัวตาราง (Table Header) */}
+              <thead className="bg-white text-gray-400">
+                <tr className="border-b h-16">
+                  {/* กำหนดความสูงแถว */}
+                  <th className="w-[25%] align-middle text-left pl-5 ">
+                    Product
+                  </th>
+                  <th className="w-[10%] align-middle text-center">Category</th>
+                  <th className="w-[10%] align-middle text-center">Price</th>
+                  <th className="w-[10%] align-middle text-center">Stock</th>
+                  <th className="w-[10%] align-middle text-center">Status</th>
+                  <th className="w-[10%] align-middle text-center">Action</th>
+                </tr>
+              </thead>
 
-            {/* ส่วนเนื้อหา (Table Body) */}
-            {products && (
-              <tbody className="">
-                {products.map((product, index) => {
-                  return (
-                    <tr
-                      className="border-b border-gray-200"
-                      key={product.productId}
-                    >
-                      <td className="py-6 px-5">
-                        {/* <div>
+              {/* ส่วนเนื้อหา (Table Body) */}
+              {products && (
+                <tbody className="">
+                  {products
+                    .filter((product) => {
+                      if (!search) {
+                        return product;
+                      } else if (
+                        product.productName
+                          .toLowerCase()
+                          .includes(search.toLowerCase())
+                      ) {
+                        return product;
+                      }
+                    })
+                    .map((product, index) => {
+                      return (
+                        <tr
+                          className="border-b border-gray-200"
+                          key={product.productId}
+                        >
+                          <td className="py-6 px-5">
+                            {/* <div>
                           <h1 className="">{product.productName}</h1>
                         </div> */}
-                        <div className="flex">
-                          <div className="w-22 h-17">
-                            <ImageById
-                              imageId={product.imageIds[0]}
-                              className={""}
-                              orientation=""
-                            />
-                          </div>
-                          <h1 className="ml-3 text-xl">
-                            {product.productName}
-                          </h1>
-                        </div>
-                      </td>
-                      <td className="py-6 px-4 align-top text-center text-xl leading-relaxed">
-                        <p>{product.category}</p>
-                      </td>
-                      <td className="py-6 text-center align-top text-xl text-gray-500 uppercase">
-                        {product.price.toLocaleString("en-US", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td className="py-6 text-center align-top text-xl">
-                        {product.quantity}
-                      </td>
-                      <td className="py-6 flex justify-center align-top text-xl">
-                        <div className="w-1/2 text-center">
-                          {product.active ? (
-                            <div className="bg-green-500 py-1 rounded-lg text-white">
-                              Active
+                            <div className="flex">
+                              <div className="w-22 h-17">
+                                <ImageById
+                                  imageId={product.imageIds[0]}
+                                  className={"rounded-sm"}
+                                  orientation=""
+                                />
+                              </div>
+                              <h1 className="ml-3 text-xl">
+                                {product.productName}
+                              </h1>
                             </div>
-                          ) : (
-                            <div className="bg-red-500 py-1 rounded-lg text-white">
-                              Inactive
+                          </td>
+                          <td className="py-6 px-4 align-top text-center text-xl leading-relaxed">
+                            <p>{product.category}</p>
+                          </td>
+                          <td className="py-6 text-center align-top text-xl text-gray-500 uppercase">
+                            {product.price.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className="py-6 text-center align-top text-xl">
+                            {product.quantity}
+                          </td>
+                          <td className="py-6 flex justify-center align-top text-xl">
+                            <div className="w-1/2 text-center">
+                              {product.active ? (
+                                <div className="bg-green-500 py-1 rounded-lg text-white">
+                                  Active
+                                </div>
+                              ) : (
+                                <div className="bg-red-500 py-1 rounded-lg text-white">
+                                  Inactive
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-6 text-center align-top text-xl">
-                        <Button
-                          className="hover:cursor-pointer select-none"
-                          onClick={() => setEditingProduct(product)}
-                        >
-                          Edit
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            )}
-          </table>
+                          </td>
+                          <td className="py-6 text-center align-top text-xl">
+                            <Button
+                              className="hover:cursor-pointer select-none"
+                              onClick={() => setEditingProduct(product)}
+                            >
+                              View / Edit
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              )}
+            </table>
+          </div>
         </div>
       </div>
     </>

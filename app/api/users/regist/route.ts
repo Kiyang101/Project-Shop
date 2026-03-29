@@ -1,12 +1,75 @@
-import login from "@/components/Login";
 import database from "@/service/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     summary: User registration
+ *     description: Register a new user account with email, password, and personal information.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@email.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *               name:
+ *                 type: string
+ *                 example: John
+ *               surName:
+ *                 type: string
+ *                 example: Doe
+ *               country:
+ *                 type: string
+ *                 example: Thailand
+ *     responses:
+ *       200:
+ *         description: Register success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Register Success
+ *                 regist:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Register failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already exists
+ *                 regist:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Server error
+ */
+
 export async function POST(request: Request) {
   const bodyData = await request.json();
-  //   console.log(bodyData);
   try {
     if (!bodyData.email || !bodyData.password || !bodyData.name) {
       return Response.json(
@@ -23,7 +86,7 @@ export async function POST(request: Request) {
 
     if (chk.rowCount > 0) {
       return Response.json(
-        { message: "Email already exists" },
+        { message: "Register Fail", regist: false },
         { status: 400 },
       );
     }

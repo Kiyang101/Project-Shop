@@ -23,11 +23,10 @@ export async function regist_handler(prevState, formData) {
     // console.log(res);
 
     if (res.regist) {
-      //   redirect("/login");
       window.location.href = "/login";
       return { message: "Register Success" };
     } else {
-      return { message: res.message };
+      return { message: "Register Fail" };
     }
   } catch (error) {
     console.log(error);

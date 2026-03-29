@@ -58,7 +58,7 @@ export async function deleteProductFromBag(productId, size = null) {
       bagId: bagData.bagId,
     });
 
-    window.location.reload();
+    window.dispatchEvent(new Event("update-bag"));
 
     return { message: "success" };
   } catch (error) {
@@ -119,6 +119,8 @@ export async function updateBag_handler(formData: {
       bagId: bagData.bagId,
     });
 
+    window.dispatchEvent(new Event("update-bag"));
+
     return { message: "success" };
   } catch (error) {
     console.log(error);
@@ -165,10 +167,16 @@ export async function postOrder_handler(data) {
 
     for (const item of products) {
       const product = await _product.getProductById(item.productId);
-      const resStock = await _product.updateStock(item.productId, {
-        quantity: product[0].quantity - item.quantity,
-      });
+      const resStockandSold = await _product.updateStockandSold(
+        item.productId,
+        {
+          quantity: product[0].quantity - item.quantity,
+          sold: product[0].sold,
+        },
+      );
     }
+
+    window.dispatchEvent(new Event("update-bag"));
 
     return { message: "success" };
   } catch (error) {

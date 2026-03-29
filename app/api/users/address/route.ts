@@ -2,6 +2,227 @@ import database from "@/service/database";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
+/**
+ * @swagger
+ * /api/users/address:
+ *   get:
+ *     summary: Get current user's address
+ *     description: Returns the address of the logged-in user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User address
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 userId:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: John
+ *                 surName:
+ *                   type: string
+ *                   example: Doe
+ *                 address:
+ *                   type: string
+ *                   example: 123 ถนนสุขุมวิท
+ *                 town:
+ *                   type: string
+ *                   example: Pattaya
+ *                 state:
+ *                   type: string
+ *                   example: Chonburi
+ *                 zipcode:
+ *                   type: string
+ *                   example: "20150"
+ *                 telephone:
+ *                   type: string
+ *                   example: "0812345678"
+ *                 country:
+ *                   type: string
+ *                   example: Thailand
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Address not found
+ *       500:
+ *         description: Server error
+ *
+ *   post:
+ *     summary: Create new address
+ *     description: Create address for the logged-in user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - surName
+ *               - address
+ *               - town
+ *               - state
+ *               - zipcode
+ *               - telephone
+ *               - country
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John
+ *               surName:
+ *                 type: string
+ *                 example: Doe
+ *               address:
+ *                 type: string
+ *                 example: 123 ถนนสุขุมวิท
+ *               town:
+ *                 type: string
+ *                 example: Pattaya
+ *               state:
+ *                 type: string
+ *                 example: Chonburi
+ *               zipcode:
+ *                 type: string
+ *                 example: "20150"
+ *               telephone:
+ *                 type: string
+ *                 example: "0812345678"
+ *               country:
+ *                 type: string
+ *                 example: Thailand
+ *     responses:
+ *       200:
+ *         description: Address created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     surName:
+ *                       type: string
+ *                     address:
+ *                       type: string
+ *                     town:
+ *                       type: string
+ *                     state:
+ *                       type: string
+ *                     zipcode:
+ *                       type: string
+ *                     telephone:
+ *                       type: string
+ *                     country:
+ *                       type: string
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ *
+ *   put:
+ *     summary: Update address
+ *     description: Update address for the logged-in user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - surName
+ *               - address
+ *               - town
+ *               - state
+ *               - zipcode
+ *               - telephone
+ *               - country
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John
+ *               surName:
+ *                 type: string
+ *                 example: Doe
+ *               address:
+ *                 type: string
+ *                 example: 123 ถนนสุขุมวิท
+ *               town:
+ *                 type: string
+ *                 example: Pattaya
+ *               state:
+ *                 type: string
+ *                 example: Chonburi
+ *               zipcode:
+ *                 type: string
+ *                 example: "20150"
+ *               telephone:
+ *                 type: string
+ *                 example: "0812345678"
+ *               country:
+ *                 type: string
+ *                 example: Thailand
+ *     responses:
+ *       200:
+ *         description: Address updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     userId:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     surName:
+ *                       type: string
+ *                     address:
+ *                       type: string
+ *                     town:
+ *                       type: string
+ *                     state:
+ *                       type: string
+ *                     zipcode:
+ *                       type: string
+ *                     telephone:
+ *                       type: string
+ *                     country:
+ *                       type: string
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
 export async function GET(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
@@ -16,14 +237,13 @@ export async function GET(request: NextRequest) {
     const secret_key = process.env.SECRET_KEY as string;
     const _user = jwt.verify(token, secret_key) as any;
 
-    if (!_user || !_user.userId) {
+    if (!_user) {
       return Response.json(
         { message: "Unauthorized", login: false },
         { status: 401 },
       );
     }
 
-    // Rely on the token for the ID, not URL params, to prevent users from querying other addresses
     const q = `SELECT * FROM address WHERE "userId" = $1`;
     const result = await database.query(q, [_user.userId]);
 

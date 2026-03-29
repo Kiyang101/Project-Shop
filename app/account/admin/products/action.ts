@@ -46,7 +46,7 @@ export async function updateProduct_handler(prevState, formData) {
   const price = formData.get("price");
   const sold = formData.get("sold");
   const rating = formData.get("rating");
-  const active = formData.get("active");
+  const active = formData.get("active") === "on";
   const quantity = formData.get("quantity");
   const category = formData.get("category");
 

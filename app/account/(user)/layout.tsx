@@ -28,29 +28,7 @@ export default async function Layout({ children }) {
         <div className="flex justify-between mt-7">
           <SideBar />
           <div className="flex justify-center w-3/4">
-            <div className="w-full">
-              {/* <div>
-                {user && (
-                  <p className="text-center text-xl">
-                    WELLCOME {user.name ? user.name.toUpperCase() : ""}{" "}
-                    {user.surName ? user.surName.toUpperCase() : ""} !
-                  </p>
-                )}
-                <p className="text-center text-gray-400">
-                  Here you can keep track of your recent activity. view and edit
-                  your account, and view or edit your list of faverite products.
-                </p>
-              </div> */}
-
-              {/* <AccountInfo
-                user={user}
-                onRefreshInfo={() => {
-                  initUser();
-                  window.location.reload();
-                }}
-              /> */}
-              {children}
-            </div>
+            <div className="w-full">{children}</div>
           </div>
         </div>
       </div>

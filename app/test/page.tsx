@@ -19,7 +19,6 @@ export default function Page() {
   return (
     <>
       <div>
-        {/* <ImageById imageId={1} className={""} orientation="" /> */}
         <div className="h-[10dvh] flex justify-center items-center bg-[rgba(0,0,0,0.15)]">
           <h1 className="text-3xl">TEST</h1>
         </div>

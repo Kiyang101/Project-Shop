@@ -1,10 +1,139 @@
 import database from "@/service/database";
 import { NextResponse } from "next/server";
-// Import your database client here (e.g., pg, postgres, Prisma raw queries)
-import { query } from "@/lib/db";
-
-export async function GET() {
+import jwt from "jsonwebtoken";
+/**
+ * @swagger
+ * /api/dashboard:
+ *   get:
+ *     summary: Get admin dashboard analytics
+ *     description: Returns revenue, orders, customers, and product performance insights. Requires admin authentication via JWT cookie.
+ *     tags:
+ *       - Dashboard
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Dashboard data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 revenue:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: number
+ *                       example: 10000
+ *                     completed:
+ *                       type: number
+ *                       example: 8000
+ *                     pending:
+ *                       type: number
+ *                       example: 1500
+ *                     cancelled:
+ *                       type: number
+ *                       example: 500
+ *                     cancelRate:
+ *                       type: number
+ *                       example: 5
+ *                 orders:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 200
+ *                     thisMonth:
+ *                       type: integer
+ *                       example: 50
+ *                     lastMonth:
+ *                       type: integer
+ *                       example: 40
+ *                     change:
+ *                       type: integer
+ *                       example: 10
+ *                     growthRate:
+ *                       type: number
+ *                       example: 25
+ *                     avgDaily:
+ *                       type: number
+ *                       example: 2
+ *                 customers:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 500
+ *                     newThisMonth:
+ *                       type: integer
+ *                       example: 50
+ *                     repeatRate:
+ *                       type: number
+ *                       example: 30
+ *                 products:
+ *                   type: object
+ *                   properties:
+ *                     bestSeller:
+ *                       type: object
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                           example: "Nike Air"
+ *                         sold:
+ *                           type: integer
+ *                           example: 120
+ *                         growth:
+ *                           type: number
+ *                           example: 0
+ *                     lowPerformer:
+ *                       type: object
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                           example: "Basic Shirt"
+ *                         sold:
+ *                           type: integer
+ *                           example: 5
+ *                         growth:
+ *                           type: number
+ *                           example: 0
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized
+ *                 login:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Server error
+ */
+export async function GET(request: Request) {
   try {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
+    const secret_key = process.env.SECRET_KEY as string;
+    const _user = jwt.verify(token, secret_key) as any;
+
+    if (!_user || _user.role !== "admin") {
+      return Response.json(
+        { message: "Unauthorized", login: false },
+        { status: 401 },
+      );
+    }
+
     // ---------------------------------------------------------
     // 1. REVENUE & FINANCIAL BREAKDOWN
     // ---------------------------------------------------------
@@ -94,7 +223,9 @@ export async function GET() {
     return NextResponse.json({
       revenue: {
         total: Number(revenueData.completed_total),
-        completed: Number(revenueData.completed_total),
+        completed: Number(
+          revenueData.completed_total - revenueData.cancelled_total,
+        ),
         pending: Number(revenueData.pending_total),
         cancelled: Number(revenueData.cancelled_total),
         // Simplistic cancel rate calculation
