@@ -7,16 +7,17 @@ import { NextRequest } from "next/server";
  * /api/products/{id}:
  *   get:
  *     summary: Get product by ID
- *     description: Returns a single product with its images.
+ *     description: Returns detailed product information including images.
  *     tags:
  *       - Products
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
+ *         description: Product ID
  *         schema:
  *           type: integer
- *         example: 1
+ *           example: 1
  *     responses:
  *       200:
  *         description: Product detail
@@ -26,24 +27,101 @@ import { NextRequest } from "next/server";
  *               type: array
  *               items:
  *                 type: object
+ *                 properties:
+ *                   productId:
+ *                     type: integer
+ *                     example: 1
+ *                   productName:
+ *                     type: string
+ *                     example: Nike Air
+ *                   description:
+ *                     type: string
+ *                     example: Running shoes
+ *                   price:
+ *                     type: number
+ *                     example: 1999.99
+ *                   sold:
+ *                     type: integer
+ *                     example: 10
+ *                   rating:
+ *                     type: number
+ *                     example: 4.5
+ *                   active:
+ *                     type: boolean
+ *                     example: true
+ *                   quantity:
+ *                     type: integer
+ *                     example: 50
+ *                   size:
+ *                     type: string
+ *                     example: M
+ *                   category:
+ *                     type: string
+ *                     example: shoes
+ *                   images:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         imageId:
+ *                           type: integer
+ *                           example: 1
+ *                         orientation:
+ *                           type: string
+ *                           example: vertical
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Server error
+ *
+ *   delete:
+ *     summary: Delete product (Admin only)
+ *     description: Delete a product by ID. Requires admin role.
+ *     tags:
+ *       - Products
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Product ID
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Product deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: success
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Product not found
  *       500:
  *         description: Server error
  *
  *   put:
- *     summary: Update product quantity and sold
- *     description: Admin-only endpoint to update product stock and sold count.
+ *     summary: Update product stock (Admin only)
+ *     description: Update product quantity and sold count.
  *     tags:
  *       - Products
  *     security:
  *       - cookieAuth: []
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: id
+ *         in: path
  *         required: true
+ *         description: Product ID
  *         schema:
  *           type: integer
+ *           example: 1
  *     requestBody:
  *       required: true
  *       content:
@@ -56,46 +134,13 @@ import { NextRequest } from "next/server";
  *             properties:
  *               quantity:
  *                 type: integer
- *                 example: 100
+ *                 example: 50
  *               sold:
  *                 type: integer
- *                 example: 20
+ *                 example: 10
  *     responses:
  *       200:
- *         description: Update successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: success
- *       400:
- *         description: Missing required fields
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: Product not found
- *       500:
- *         description: Server error
- *
- *   delete:
- *     summary: Delete product by ID
- *     description: Admin-only endpoint to delete a product.
- *     tags:
- *       - Products
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Delete successful
+ *         description: Product updated
  *         content:
  *           application/json:
  *             schema:
@@ -152,6 +197,11 @@ export async function GET(request: NextRequest, { params }) {
       `,
       values: [id],
     });
+
+    if (result.rowCount === 0) {
+      return Response.json({ message: "Not found" }, { status: 404 });
+    }
+
     return Response.json(result.rows);
   } catch (error: any) {
     console.log(error.message);
@@ -169,6 +219,10 @@ export async function DELETE(request: NextRequest, { params }) {
         { message: "Unauthorized", login: false },
         { status: 401 },
       );
+    }
+
+    if (!id || isNaN(Number(id))) {
+      return Response.json({ message: "Invalid ID" }, { status: 400 });
     }
 
     const secret_key = process.env.SECRET_KEY as string;
@@ -209,10 +263,14 @@ export async function PUT(request: NextRequest, { params }) {
       );
     }
 
+    if (!id || isNaN(Number(id))) {
+      return Response.json({ message: "Invalid ID" }, { status: 400 });
+    }
+
     const secret_key = process.env.SECRET_KEY as string;
     const _user = jwt.verify(token, secret_key) as any;
 
-    if (!_user || _user.role !== "admin") {
+    if (!_user) {
       return Response.json(
         { message: "Unauthorized", login: false },
         { status: 401 },

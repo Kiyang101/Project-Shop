@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     const exist = await database.query(
       `SELECT 1 FROM season_products WHERE "productId" = $1`,
-      [values],
+      [bodyData.productId],
     );
 
     if (exist.rowCount > 0) {
@@ -115,9 +115,8 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const values = bodyData.productId;
 
-    const result = await database.query(q, [values]);
+    const result = await database.query(q, [bodyData.productId]);
     return Response.json({ message: "success" });
   } catch (error) {
     console.log("error", error);
